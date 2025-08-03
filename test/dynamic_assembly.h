@@ -22,16 +22,5 @@ typedef struct {
     bool is_prepared;
 } dynamic_assembly_function_t;
 
-typedef enum {
-    FFI_ARG_VOID,
-    FFI_ARG_INT,
-    FFI_ARG_LONG,
-    FFI_ARG_FLOAT,
-    FFI_ARG_DOUBLE,
-    FFI_ARG_POINTER,
-    FFI_ARG_STRING
-} ffi_arg_type_t;
-
-
 dynamic_assembly_function_t *create_dynam_asm_func(void);
 void unload_assembly_function(dynamic_assembly_function_t *);

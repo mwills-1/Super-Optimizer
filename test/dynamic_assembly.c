@@ -1,4 +1,7 @@
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <dlfcn.h>
 #include "dynamic_assembly.h"
 
 dynamic_assembly_function_t *create_dynam_asm_func() {
