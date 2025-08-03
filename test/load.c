@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <dlfcn.h>
 #include <string.h>
-#include "load_execute.h"
+#include "load.h"
 #include <ffi.h>
 #include <unistd.h>
 #include <assert.h>
@@ -31,25 +31,13 @@ int create_shared_library(const char *object_file, const char *library_file) {
     return result == 0 ? 0 : -1;
 }
 
-dynamic_assembly_function_t *create_dynam_ass_func() {
-    dynamic_assembly_function_t *func = malloc(sizeof(dynamic_assembly_function_t));
-    func->assembly_file = NULL;
-    func->function_name = NULL;
-    func->object_file = NULL;
-    func->library_handle = NULL;
-    func->library_file = NULL;
-    func->arg_types = NULL; 
-    func->return_type = NULL;
-
-    return func;
-}
 
 dynamic_assembly_function_t *load_assembly_function(const char *assembly_file, 
                             const char *function_name) {
     assert(assembly_file != NULL);
     assert(function_name != NULL);
     
-    dynamic_assembly_function_t *func = create_dynam_ass_func();
+    dynamic_assembly_function_t *func = create_dynam_asm_func();
 
     func->assembly_file = strdup(assembly_file);
     func->function_name = strdup(function_name);
@@ -94,34 +82,6 @@ dynamic_assembly_function_t *load_assembly_function(const char *assembly_file,
     return func;
 }
 
-void unload_assembly_function(dynamic_assembly_function_t *func) {
-    if (!func) return;
-
-    if (func->assembly_file) {free(func->assembly_file);}
-    if (func->function_name) {free(func->function_name);}
-
-    if (func->object_file) {
-        if (access(func->object_file, F_OK) == 0){
-            unlink(func->object_file);
-        }
-        free(func->object_file);
-    }
-    if (func->library_file) {
-        if (access(func->library_file, F_OK) == 0){
-            unlink(func->library_file);
-        }
-        free(func->library_file);
-    }
-
-    if (func->library_handle) {
-        dlclose(func->library_handle);
-    }
-
-    if (func->arg_types) {
-        free(func->arg_types);
-    }
-    free(func);
-}
 
 int main(int argc, char *argv[]) {
     if (argc != 3) {
@@ -146,5 +106,5 @@ int main(int argc, char *argv[]) {
 
     unload_assembly_function(func);
 
-    // return 0;
+    return 0;
 }
