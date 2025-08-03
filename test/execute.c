@@ -22,6 +22,39 @@ int prepare_ffi_signature(dynamic_assembly_function_t *func,
     
     assert(func != NULL);
 
-    if (func->is_prepared &&q
+    if (func->is_prepared && func->arg_types) { 
+        func->is_preapged = false;
+        free(func->arg_types);
+        func->arg_types = NULL;
+    }
 
+    func->arg_count = arg_count;
+    func->return_type = get_ffi_type(return_type);
+
+    if (arg_count > 0) {
+        func->arg_types = malloc(arg_count *sizeof(ffi_type *));
+
+        if (!func->arg_types) {
+            return -1;
+        }
+        for (int i =  0; i < arg_count; i ++) {
+            func->arg_types[i] = get_ffi_type(arg_types[i]);
+        }
+    }
+
+    ffi_status status = ffi_prep_cif(&func->cif, FFI_DEFAULT_ABI, 
+        arg_count, func->return_type, func->arg_types);
+
+    if (status == FFI_OK) {
+        func->is_prepared = 1;
+        return 0;
+    }
+
+    // Cleanup on failure
+    if (func->arg_types) {
+        free(func->arg_types);
+        func->arg_types = NULL;
+    }
+
+    return -1;
 }
