@@ -83,28 +83,4 @@ dynamic_assembly_function_t *load_assembly_function(const char *assembly_file,
 }
 
 
-int main(int argc, char *argv[]) {
-    if (argc != 3) {
-        printf("Usage: %s <arg1> <arg2>\n", argv[0]);
-        return 1;
-    }
-
-    dynamic_assembly_function_t *func = load_assembly_function("math.s", "add_numbers");
-    if (!func) {
-        printf("Failed to load assembly function\n");
-        return 1;
-    }
-
-    int (*add_numbers)(int, int) = func->function_ptr;
-
-    int arg1 = atoi(argv[1]);
-    int arg2 = atoi(argv[2]);
-    
-    int res = add_numbers(arg1, arg2); 
-
-    printf("Results: %d\n", res);
-
-    unload_assembly_function(func);
-
-    return 0;
-}
+// Main function moved to main.c

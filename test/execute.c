@@ -61,8 +61,8 @@ int prepare_ffi_signature(dynamic_assembly_function_t *func,
     return -1;
 }
 
-void execute_assembly_function_ffi(dynamic_assembly_function_t func *, \
-                                    void *reuslt, \
+int execute_assembly_function_ffi(dynamic_assembly_function_t *func, 
+                                    void *result, 
                                     void **args) {
     assert(func != NULL);
 
@@ -70,7 +70,7 @@ void execute_assembly_function_ffi(dynamic_assembly_function_t func *, \
         return -1;
     }
 
-    ffi_call(&func->cfi, func->function_ptr, result, args);
+    ffi_call(&func->cif, func->function_ptr, result, args);
     return 0;
 }
 
